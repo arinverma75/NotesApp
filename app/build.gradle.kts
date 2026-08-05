@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -55,4 +57,14 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    // Room Database
+    implementation("androidx.room:room-runtime:2.7.2")
+    implementation("androidx.room:room-ktx:2.7.2")
+    ksp("androidx.room:room-compiler:2.7.2")
+
+// Lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.2")
+
+// Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,24 +30,32 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.notesapp.model.Note
-import com.example.notesapp.viewmodel.NotesViewModel
 import com.example.notesapp.ui.theme.NotesAppTheme
+import com.example.notesapp.viewmodel.NotesViewModel
+import com.example.notesapp.viewmodel.NotesViewModelFactory
 
 class MainActivity : ComponentActivity() {
+
+    private val database by lazy { NoteDatabase.getDatabase(this) }
+    private val repository by lazy { NoteRepository(database.noteDao()) }
+    private val viewModel: NotesViewModel by viewModels {
+        NotesViewModelFactory(repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
             NotesAppTheme {
-                val viewModel: NotesViewModel = viewModel()
-
                 NotesScreen(viewModel)
             }
         }
@@ -58,20 +67,17 @@ class MainActivity : ComponentActivity() {
 fun NotesScreen(viewModel: NotesViewModel) {
 
     var showDialog by remember { mutableStateOf(false) }
+    val notesList by viewModel.notes.collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text("Notes App")
-                }
+                title = { Text("Notes App") }
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    showDialog = true
-                }
+                onClick = { showDialog = true }
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -88,9 +94,7 @@ fun NotesScreen(viewModel: NotesViewModel) {
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-
-            items(viewModel.notes) { note ->
-
+            items(notesList) { note ->
                 NoteCard(
                     note = note,
                     onDelete = {
@@ -101,11 +105,8 @@ fun NotesScreen(viewModel: NotesViewModel) {
         }
 
         if (showDialog) {
-
             AddNoteDialog(
-                onDismiss = {
-                    showDialog = false
-                },
+                onDismiss = { showDialog = false },
                 onAdd = { title, description ->
                     viewModel.addNote(title, description)
                     showDialog = false
@@ -117,21 +118,18 @@ fun NotesScreen(viewModel: NotesViewModel) {
 
 @Composable
 fun NoteCard(
-    note: Note,
+    note: NoteEntity,
     onDelete: () -> Unit
 ) {
-
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         )
     ) {
-
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-
             Text(
                 text = note.title,
                 style = MaterialTheme.typography.titleMedium
@@ -150,7 +148,6 @@ fun NoteCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-
                 Button(
                     onClick = onDelete
                 ) {
@@ -166,29 +163,18 @@ fun AddNoteDialog(
     onDismiss: () -> Unit,
     onAdd: (String, String) -> Unit
 ) {
-
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-
-        title = {
-            Text("Add Note")
-        },
-
+        title = { Text("Add Note") },
         text = {
-
             Column {
-
                 OutlinedTextField(
                     value = title,
-                    onValueChange = {
-                        title = it
-                    },
-                    label = {
-                        Text("Title")
-                    },
+                    onValueChange = { title = it },
+                    label = { Text("Title") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -196,30 +182,24 @@ fun AddNoteDialog(
 
                 OutlinedTextField(
                     value = description,
-                    onValueChange = {
-                        description = it
-                    },
-                    label = {
-                        Text("Description")
-                    },
+                    onValueChange = { description = it },
+                    label = { Text("Description") },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
         },
-
         confirmButton = {
-
             Button(
                 onClick = {
-                    onAdd(title, description)
+                    if (title.isNotBlank() || description.isNotBlank()) {
+                        onAdd(title, description)
+                    }
                 }
             ) {
                 Text("Add")
             }
         },
-
         dismissButton = {
-
             TextButton(
                 onClick = onDismiss
             ) {

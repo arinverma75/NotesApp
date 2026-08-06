@@ -27,6 +27,18 @@ In Task 1, the app utilized in-memory state management. In **Task 2**, the app h
 
 ---
 
+## Screenshot
+
+<img width="1080" height="2400" alt="Image" src="https://github.com/user-attachments/assets/1cf500e5-da70-4545-b36a-ef58562968a1" />
+<img width="1080" height="2400" alt="Image" src="https://github.com/user-attachments/assets/8258a8fe-38d8-40ba-9959-bf97521bf177" />
+<img width="1080" height="2400" alt="Image" src="https://github.com/user-attachments/assets/dd581a07-a733-4f38-9618-f2ecc374b753" />
+<img width="1080" height="2400" alt="Image" src="https://github.com/user-attachments/assets/2e2a233f-f999-450b-8349-5dc3e90dcb4d" />
+
+<img width="1904" height="1036" alt="Image" src="https://github.com/user-attachments/assets/023154b4-5efa-453a-afb2-589897246f98" />
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/92d7a9aa-050f-4b4e-b0b3-7fee681e3e37" />
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/a228cfa6-ef3d-49e2-bf1c-89f6d145c46b" />
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/44f082fc-c49c-4132-8498-082fe452b2cc" />
+
 ## 🏗️ Architecture Overview
 
 The app follows the standard Android recommended architecture:

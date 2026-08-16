@@ -31,16 +31,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.notesapp.model.Post
 import com.example.notesapp.ui.theme.NotesAppTheme
 import com.example.notesapp.viewmodel.NotesViewModel
 import com.example.notesapp.viewmodel.NotesViewModelFactory
+import com.example.notesapp.viewmodel.PostViewModel
+import androidx.compose.foundation.layout.statusBarsPadding
 
 class MainActivity : ComponentActivity() {
 
@@ -56,7 +62,29 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             NotesAppTheme {
-                NotesScreen(viewModel)
+                val postViewModel: PostViewModel = viewModel()
+                var showPosts by remember { mutableStateOf(false) }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .statusBarsPadding()
+                ) {
+                    Button(
+                        onClick = { showPosts = !showPosts },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp)
+                    ) {
+                        Text(if (showPosts) "Show Notes" else "Show API Posts")
+                    }
+
+                    if (showPosts) {
+                        PostScreen(postViewModel)
+                    } else {
+                        NotesScreen(viewModel)
+                    }
+                }
             }
         }
     }
@@ -207,4 +235,59 @@ fun AddNoteDialog(
             }
         }
     )
+}
+
+@Composable
+fun PostScreen(viewModel: PostViewModel) {
+    val posts = viewModel.posts.value
+    val loading = viewModel.isLoading.value
+    val error = viewModel.error.value
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchPosts()
+    }
+
+    when {
+        loading -> Text(
+            text = "Loading...",
+            modifier = Modifier.padding(16.dp)
+        )
+        error.isNotEmpty() -> Text(
+            text = error,
+            modifier = Modifier.padding(16.dp)
+        )
+        else -> {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(posts) { post ->
+                    PostCard(post)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun PostCard(post: Post) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = post.title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = post.body,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
 }

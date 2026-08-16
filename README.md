@@ -45,6 +45,10 @@ Remote Server (JSONPlaceholder API)
 - Gson Converter
 - Kotlin Coroutines
 
+## Screenshot
+<img width="722" height="1600" alt="Image" src="https://github.com/user-attachments/assets/26d2f306-4457-4a82-bc9f-cc06cc84ac5e" />
+<img width="1080" height="2392" alt="Image" src="https://github.com/user-attachments/assets/3ee4d216-0677-4708-8b9f-256067e7ac8f" />
+
 ## How to Test
 1. Run the app — the Notes screen (local data) loads by default
 2. Tap **"Show API Posts"** to switch to the live API screen

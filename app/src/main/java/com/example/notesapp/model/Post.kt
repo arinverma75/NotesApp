@@ -1,7 +1,8 @@
 package com.example.notesapp.model
 
-data class Note(
+data class Post(
+    val userId: Int,
     val id: Int,
     val title: String,
-    val description: String
+    val body: String
 )

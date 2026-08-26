@@ -1,5 +1,6 @@
 package com.example.notesapp
 
+import com.example.notesapp.navigation.AppNavigation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -55,40 +56,15 @@ class MainActivity : ComponentActivity() {
     private val viewModel: NotesViewModel by viewModels {
         NotesViewModelFactory(repository)
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
-        setContent {
-            NotesAppTheme {
-                val postViewModel: PostViewModel = viewModel()
-                var showPosts by remember { mutableStateOf(false) }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .statusBarsPadding()
-                ) {
-                    Button(
-                        onClick = { showPosts = !showPosts },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp)
-                    ) {
-                        Text(if (showPosts) "Show Notes" else "Show API Posts")
-                    }
-
-                    if (showPosts) {
-                        PostScreen(postViewModel)
-                    } else {
-                        NotesScreen(viewModel)
-                    }
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContent {
+                NotesAppTheme {
+                    AppNavigation(viewModel = viewModel)
                 }
             }
         }
     }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

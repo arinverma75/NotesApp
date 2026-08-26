@@ -7,6 +7,7 @@ import com.example.notesapp.NoteEntity
 import com.example.notesapp.NoteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
 
 class NotesViewModel(private val repository: NoteRepository) : ViewModel() {
 
@@ -23,6 +24,14 @@ class NotesViewModel(private val repository: NoteRepository) : ViewModel() {
         viewModelScope.launch {
             repository.delete(note)
         }
+    }
+    fun updateNote(note: NoteEntity) {
+        viewModelScope.launch {
+            repository.update(note)
+        }
+    }
+    fun getItemById(id: Int): Flow<NoteEntity?>{
+        return notes.map{list -> list.find{it.id == id}}
     }
 }
 

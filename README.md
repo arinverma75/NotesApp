@@ -54,5 +54,19 @@ Remote Server (JSONPlaceholder API)
 2. Tap **"Show API Posts"** to switch to the live API screen
 3. Observe the brief loading state, followed by the fetched list of posts
 4. To test the error state, disable the emulator's internet connection (or enable airplane mode) and tap the button again
+
+## Task 4: Multi-Screen Navigation (Jetpack Navigation Compose)
+
+### Navigation Flow
+- **Home Screen** → displays list of notes, FAB navigates to Add screen
+- **Detail Screen** → shows full note, Edit/Delete actions
+- **Add/Edit Screen** → create new note or update existing one
+
+### Screen Structure
+- `NavGraph.kt` — defines all routes and navigation logic
+- `HomeScreen.kt`, `DetailScreen.kt`, `AddEditScreen.kt` — under `ui/theme/screens/`
+- Data passed between screens using navigation arguments (`itemId`)
+- Back stack handled via `navController.popBackStack()`
+
 ---
 

@@ -1,0 +1,62 @@
+package com.example.notesapp.ui.theme.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.notesapp.viewmodel.AuthState
+import com.example.notesapp.viewmodel.AuthViewModel
+
+@Composable
+fun SignupScreen(navController: NavController, viewModel: AuthViewModel) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val authState by viewModel.authState.collectAsState()
+
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Authenticated) {
+            navController.navigate("home") {
+                popUpTo("login") { inclusive = true }
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(24.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Create Account", style = MaterialTheme.typography.headlineMedium)
+        Spacer(Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = email, onValueChange = { email = it },
+            label = { Text("Email") }, modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(8.dp))
+        OutlinedTextField(
+            value = password, onValueChange = { password = it },
+            label = { Text("Password (min 6 chars)") }, modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(16.dp))
+
+        if (authState is AuthState.Error) {
+            Text((authState as AuthState.Error).message, color = MaterialTheme.colorScheme.error)
+            Spacer(Modifier.height(8.dp))
+        }
+
+        Button(
+            onClick = { viewModel.signup(email, password) },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = authState !is AuthState.Loading
+        ) {
+            if (authState is AuthState.Loading) CircularProgressIndicator(Modifier.size(20.dp))
+            else Text("Sign Up")
+        }
+
+        TextButton(onClick = { navController.popBackStack() }) {
+            Text("Already have an account? Login")
+        }
+    }
+}

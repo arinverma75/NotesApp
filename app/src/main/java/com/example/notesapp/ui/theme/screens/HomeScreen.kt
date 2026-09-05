@@ -35,20 +35,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+
+
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.IconButton
 import com.example.notesapp.viewmodel.NotesViewModel
+import com.example.notesapp.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: NotesViewModel) {
+fun HomeScreen(navController: NavController, viewModel: NotesViewModel, authViewModel: AuthViewModel){
     val items by viewModel.notes.collectAsState(initial = emptyList())
 
     Scaffold(
+
         topBar = {
             TopAppBar(
                 title = { Text("My Notes", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                ),
+                actions = {
+                    IconButton(onClick = {
+                        authViewModel.logout()
+                        navController.navigate("login") {
+                            popUpTo(0)
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "Logout"
+                        )
+                    }
+                }
             )
         },
         floatingActionButton = {

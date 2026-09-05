@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NotesApp</string>
+
+    <string name="default_web_client_id">381374066623-4g3qpp2kmp9l3paubn71nk63prcg4970.apps.googleusercontent.com</string>
 </resources>

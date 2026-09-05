@@ -11,14 +11,31 @@ import com.example.notesapp.ui.theme.screens.HomeScreen
 import com.example.notesapp.ui.theme.screens.DetailScreen
 import com.example.notesapp.ui.theme.screens.AddEditScreen
 
+
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.example.notesapp.ui.theme.screens.LoginScreen
+import com.example.notesapp.ui.theme.screens.SignupScreen
+import com.example.notesapp.viewmodel.AuthViewModel
+
+
 @Composable
-fun AppNavigation(viewModel: NotesViewModel) {
+fun AppNavigation(viewModel: NotesViewModel, authViewModel: AuthViewModel) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "login") {
+        composable(route = "login") {
+            LoginScreen(navController = navController, viewModel = authViewModel)
+        }
 
-        composable("home") {
-            HomeScreen(navController = navController, viewModel = viewModel)
+        composable(route = "signup") {
+            SignupScreen(navController = navController, viewModel = authViewModel)
+        }
+
+        composable(route = "home") {
+            HomeScreen(navController = navController, viewModel = viewModel, authViewModel = authViewModel)
         }
 
         composable(

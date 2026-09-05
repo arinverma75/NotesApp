@@ -48,6 +48,8 @@ import com.example.notesapp.viewmodel.NotesViewModel
 import com.example.notesapp.viewmodel.NotesViewModelFactory
 import com.example.notesapp.viewmodel.PostViewModel
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.notesapp.viewmodel.AuthViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -60,7 +62,8 @@ class MainActivity : ComponentActivity() {
             super.onCreate(savedInstanceState)
             setContent {
                 NotesAppTheme {
-                    AppNavigation(viewModel = viewModel)
+                    val authViewModel: AuthViewModel = viewModel()
+                    AppNavigation(viewModel = viewModel, authViewModel = authViewModel)
                 }
             }
         }
